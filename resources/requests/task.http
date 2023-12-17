@@ -1,0 +1,28 @@
+### Create Task
+POST {{host}}/tasks
+Content-Type: application/json
+
+{
+  "description": "desc-desc",
+  "title": "title"
+}
+
+### Reads tasks
+GET {{host}}/tasks
+Content-Type: application/json
+
+### Read task
+GET {{host}}/tasks/6
+Content-Type: application/json
+
+### Update Task
+PUT {{host}}/tasks/7
+Content-Type: application/json
+
+{
+  "status": "passive"
+}
+
+### Delete Task
+DELETE {{host}}/tasks/6
+Content-Type: application/json

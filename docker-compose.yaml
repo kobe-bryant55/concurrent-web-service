@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  postgres-db:
+    image: postgres
+    restart: always
+    container_name: webservice_db
+    environment:
+      POSTGRES_USER: development
+      POSTGRES_PASSWORD: development
+      POSTGRES_DB: development
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
