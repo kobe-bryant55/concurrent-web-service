@@ -1,11 +1,18 @@
 package main
 
 import (
+	_ "github.com/MehmetTalhaSeker/concurrent-web-service/api/docs"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/database"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/shared/config"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/worker"
 )
 
+// @title API
+// @version 0.01
+// @description Concurrent Data Processing Web Service
+
+// @host localhost:3333
+// @BasePath /
 func main() {
 	// Initialize application configs.
 	cfg := config.Init()

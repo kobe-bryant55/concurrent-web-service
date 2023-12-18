@@ -7,3 +7,7 @@ type RequestWithID struct {
 type ResponseWithID struct {
 	ID string `json:"id"`
 }
+
+type ResponseOK struct {
+	Success string `json:"success"`
+}
