@@ -2,7 +2,7 @@ package taskdomain
 
 import (
 	"database/sql"
-	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/errorutils"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/errorutils"
 )
 
 type taskRepository struct {

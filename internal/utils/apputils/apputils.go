@@ -1,9 +1,9 @@
-package utils
+package apputils
 
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/errorutils"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/errorutils"
 	"strconv"
 )
 

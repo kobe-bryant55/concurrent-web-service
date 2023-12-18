@@ -1,0 +1,41 @@
+### Multiple Task Process
+POST {{host}}/multiple
+Content-Type: application/json
+
+{
+  "token": "123",
+  "payloads": [
+    {
+      "operationType": "OpCreate",
+      "data": {
+        "description": "yeni desc",
+        "title": "yeni title"
+      }
+    },
+    {
+      "operationType": "OpPut",
+      "data": {
+        "id": "14",
+        "status": "passive"
+      }
+    },
+    {
+      "operationType": "OpDelete",
+      "data": {
+        "id": "14"
+      }
+    },
+    {
+      "operationType": "OpPut",
+      "data": {
+        "description": "desc-desc",
+        "title": "title"
+      }
+    },
+    {
+    },
+    {
+      "title": "jaj"
+    }
+  ]
+}

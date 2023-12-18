@@ -51,6 +51,7 @@ func (s postgresStore) InitDB() {
 	initOnce.Do(func() {
 		s.createStatusEnums()
 		s.createTasksTable()
+		log.Println("DB started successfully...")
 	})
 }
 

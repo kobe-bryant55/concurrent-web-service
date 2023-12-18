@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/application/task"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/dto"
-	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/errorutils"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/apiutils"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/errorutils"
 	"net/http"
 	"regexp"
 )
@@ -48,7 +49,7 @@ func (h *taskHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 
 	default:
-		writeJSON(w, http.StatusMethodNotAllowed, errorutils.New(errorutils.ErrMethodNotAllowed, nil))
+		apiutils.WriteJSON(w, http.StatusMethodNotAllowed, errorutils.New(errorutils.ErrMethodNotAllowed, nil))
 		return
 	}
 }
@@ -65,7 +66,7 @@ func (h *taskHandler) create(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	writeJSON(w, http.StatusOK, "OK")
+	apiutils.WriteJSON(w, http.StatusOK, "OK")
 	return nil
 }
 
@@ -75,7 +76,7 @@ func (h *taskHandler) list(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	writeJSON(w, http.StatusOK, l)
+	apiutils.WriteJSON(w, http.StatusOK, l)
 
 	return nil
 }
@@ -90,7 +91,7 @@ func (h *taskHandler) read(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	writeJSON(w, http.StatusOK, l)
+	apiutils.WriteJSON(w, http.StatusOK, l)
 
 	return nil
 }
@@ -110,7 +111,7 @@ func (h *taskHandler) update(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	writeJSON(w, http.StatusOK, res)
+	apiutils.WriteJSON(w, http.StatusOK, res)
 	return nil
 }
 
@@ -124,6 +125,6 @@ func (h *taskHandler) delete(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	writeJSON(w, http.StatusOK, res)
+	apiutils.WriteJSON(w, http.StatusOK, res)
 	return nil
 }

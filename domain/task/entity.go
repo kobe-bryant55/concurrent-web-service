@@ -3,8 +3,8 @@ package taskdomain
 import (
 	"errors"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/dto"
-	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/errorutils"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/types"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/errorutils"
 )
 
 type Task struct {

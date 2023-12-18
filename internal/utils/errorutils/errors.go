@@ -2,6 +2,7 @@ package errorutils
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 )
@@ -56,7 +57,7 @@ func Code(err error) string {
 	if code, ok := errorCodes[err]; ok {
 		return code
 	}
-	return "validation/" + strings.ReplaceAll(err.Error(), " ", "-")
+	return strings.ReplaceAll(err.Error(), " ", "-")
 }
 
 var statusCodeMap = map[string]int{
@@ -92,4 +93,20 @@ func ValidationError(errors []*APIError) error {
 	return &APIErrors{
 		errors,
 	}
+}
+
+func Required(field string) error {
+	return fmt.Errorf("%s is required", field)
+}
+
+func Max(field string) error {
+	return fmt.Errorf("%s too long", field)
+}
+
+func Min(field string) error {
+	return fmt.Errorf("%s too short", field)
+}
+
+func Len(field string) error {
+	return fmt.Errorf("%s invalid", field)
 }

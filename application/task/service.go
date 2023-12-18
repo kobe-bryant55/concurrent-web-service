@@ -3,9 +3,9 @@ package task
 import (
 	"github.com/MehmetTalhaSeker/concurrent-web-service/domain/task"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/dto"
-	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/errorutils"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/types"
-	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/apputils"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/errorutils"
 )
 
 type Service interface {
@@ -41,7 +41,7 @@ func (s *service) Create(req *dto.TaskCreateRequest) error {
 }
 
 func (s *service) Read(req *dto.RequestWithID) (*dto.TaskResponse, error) {
-	tid, err := utils.StringToUINT64(req.ID)
+	tid, err := apputils.StringToUINT64(req.ID)
 	if err != nil {
 		return nil, errorutils.New(errorutils.ErrInvalidID, err)
 	}
@@ -70,7 +70,7 @@ func (s *service) Reads() ([]*dto.TaskResponse, error) {
 }
 
 func (s *service) Update(req *dto.TaskUpdateRequest) (*dto.TaskResponse, error) {
-	tid, err := utils.StringToUINT64(req.ID)
+	tid, err := apputils.StringToUINT64(req.ID)
 	if err != nil {
 		return nil, errorutils.New(errorutils.ErrInvalidID, err)
 	}
@@ -92,7 +92,7 @@ func (s *service) Update(req *dto.TaskUpdateRequest) (*dto.TaskResponse, error) 
 }
 
 func (s *service) Delete(req *dto.RequestWithID) (*dto.ResponseWithID, error) {
-	tid, err := utils.StringToUINT64(req.ID)
+	tid, err := apputils.StringToUINT64(req.ID)
 	if err != nil {
 		return nil, errorutils.New(errorutils.ErrInvalidID, err)
 	}
