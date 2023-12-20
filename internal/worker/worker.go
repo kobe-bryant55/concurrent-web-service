@@ -1,15 +1,9 @@
 package worker
 
 import (
-	"github.com/MehmetTalhaSeker/concurrent-web-service/application/task"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/application/taskservice"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/dto"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/apputils"
-)
-
-var (
-	MaxWorker       = 3  //os.Getenv("MAX_WORKERS")
-	MaxQueue        = 20 //os.Getenv("MAX_QUEUE")
-	MaxLength int64 = 2048
 )
 
 // Job represents the job to be run
@@ -22,10 +16,10 @@ type Worker struct {
 	WorkerPool chan chan Job
 	JobChannel chan Job
 	quit       chan struct{}
-	service    task.Service
+	service    taskservice.Service
 }
 
-func NewWorker(workerPool chan chan Job, service task.Service) Worker {
+func NewWorker(workerPool chan chan Job, service taskservice.Service) Worker {
 	return Worker{
 		WorkerPool: workerPool,
 		JobChannel: make(chan Job),

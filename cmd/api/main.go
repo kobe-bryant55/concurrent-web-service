@@ -1,7 +1,7 @@
 package main
 
 import (
-	_ "github.com/MehmetTalhaSeker/concurrent-web-service/api/docs"
+	_ "github.com/MehmetTalhaSeker/concurrent-web-service/docs"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/database"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/shared/config"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/worker"
@@ -24,7 +24,7 @@ func main() {
 	store.InitDB()
 
 	// Create a jobQueue.
-	jobQueue := make(chan worker.Job, worker.MaxQueue)
+	jobQueue := make(chan worker.Job, 10)
 
 	// Create and Start server.
 	server := NewServer(":3333", cfg, store.GetInstance(), jobQueue)

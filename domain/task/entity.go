@@ -32,17 +32,17 @@ func (t *Task) GetStatus() types.Status {
 
 func (t *Task) SetStatus(s types.Status) []*errorutils.APIError {
 	t.status = s
-	if errs := t.Validate(); errs != nil {
+	if errs := t.validate(); errs != nil {
 		return errs
 	}
 
 	return nil
 }
 
-func (t *Task) Validate() []*errorutils.APIError {
+func (t *Task) validate() []*errorutils.APIError {
 	var errs []*errorutils.APIError
 
-	if len(t.description) == 5 {
+	if len(t.description) == 0 {
 		errs = append(errs, errorutils.New(errors.New("description required"), nil))
 	} else if len(t.description) < 5 {
 		errs = append(errs, errorutils.New(errors.New("description too short"), nil))
@@ -74,35 +74,4 @@ func (t *Task) ToDTO() *dto.TaskResponse {
 		Title:       t.title,
 		Status:      t.status,
 	}
-}
-
-type TaskBuilder struct {
-	Task
-}
-
-func NewTaskBuilder() *TaskBuilder {
-	return &TaskBuilder{Task{}}
-}
-
-func (t *TaskBuilder) SetTitle(ti string) *TaskBuilder {
-	t.title = ti
-	return t
-}
-
-func (t *TaskBuilder) SetDescription(d string) *TaskBuilder {
-	t.description = d
-	return t
-}
-
-func (t *TaskBuilder) SetStatus(s types.Status) *TaskBuilder {
-	t.status = s
-	return t
-}
-
-func (t *TaskBuilder) Build() (*Task, []*errorutils.APIError) {
-	if errs := t.Validate(); errs != nil {
-		return nil, errs
-	}
-
-	return &t.Task, nil
 }

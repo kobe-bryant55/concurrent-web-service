@@ -29,6 +29,13 @@ type Config struct {
 		Secret string `yaml:"secret"`
 		Exp    string `yaml:"exp"`
 	} `yaml:"jwt"`
+
+	Worker struct {
+		MaxWorker int   `yaml:"max_worker"`
+		MaxQueue  int   `yaml:"max_queue"`
+		MaxLength int64 `yaml:"max_length"`
+	} `yaml:"worker"`
+
 	Version bool `yaml:"version"`
 }
 

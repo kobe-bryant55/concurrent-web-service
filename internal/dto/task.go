@@ -13,7 +13,7 @@ type TaskCreateRequest struct {
 // TaskUpdateRequest is the request body for the task update endpoint.
 type TaskUpdateRequest struct {
 	ID     string       `json:"id" validate:"required"`
-	Status types.Status `json:"status" validate:"required"`
+	Status types.Status `json:"status" validate:"required,oneof=active passive"`
 }
 
 // TaskResponse is the response body for the task.

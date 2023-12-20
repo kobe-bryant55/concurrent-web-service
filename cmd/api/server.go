@@ -2,7 +2,7 @@ package main
 
 import (
 	"database/sql"
-	"github.com/MehmetTalhaSeker/concurrent-web-service/application/task"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/application/taskservice"
 	taskdomain "github.com/MehmetTalhaSeker/concurrent-web-service/domain/task"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/shared/config"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/errorutils"
@@ -36,11 +36,11 @@ func (s *Server) Run() {
 	mux := http.NewServeMux()
 
 	tr := taskdomain.NewPostgresTaskRepository(s.db)
-	ts := task.NewService(tr)
+	ts := taskservice.NewService(tr)
 	th := newTaskHandler(ts)
 
 	// Create and Start dispatcher.
-	dispatcher := worker.NewDispatcher(worker.MaxWorker, s.jobQueue, ts)
+	dispatcher := worker.NewDispatcher(10, s.jobQueue, ts)
 	dispatcher.Run()
 
 	mux.Handle("/tasks/", th)
@@ -66,6 +66,5 @@ func errorHandler(f apiFunc) http.HandlerFunc {
 
 func getID(r *http.Request, prefix string) string {
 	id := strings.TrimPrefix(r.URL.Path, prefix)
-
 	return id
 }

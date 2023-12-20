@@ -1,4 +1,4 @@
-package task
+package taskservice
 
 import (
 	"github.com/MehmetTalhaSeker/concurrent-web-service/domain/task"

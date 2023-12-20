@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/MehmetTalhaSeker/concurrent-web-service/application/task"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/application/taskservice"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/dto"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/apiutils"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/errorutils"
@@ -19,10 +19,10 @@ var (
 )
 
 type taskHandler struct {
-	service task.Service
+	service taskservice.Service
 }
 
-func newTaskHandler(service task.Service) *taskHandler {
+func newTaskHandler(service taskservice.Service) *taskHandler {
 	return &taskHandler{service: service}
 }
 

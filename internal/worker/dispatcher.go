@@ -1,7 +1,7 @@
 package worker
 
 import (
-	"github.com/MehmetTalhaSeker/concurrent-web-service/application/task"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/application/taskservice"
 	"log"
 )
 
@@ -10,10 +10,10 @@ type Dispatcher struct {
 	maxWorkers int
 	WorkerPool chan chan Job
 	jobQueue   chan Job
-	service    task.Service
+	service    taskservice.Service
 }
 
-func NewDispatcher(maxWorkers int, jobQueue chan Job, service task.Service) *Dispatcher {
+func NewDispatcher(maxWorkers int, jobQueue chan Job, service taskservice.Service) *Dispatcher {
 	pool := make(chan chan Job, maxWorkers)
 	return &Dispatcher{WorkerPool: pool, maxWorkers: maxWorkers, jobQueue: jobQueue, service: service}
 }
