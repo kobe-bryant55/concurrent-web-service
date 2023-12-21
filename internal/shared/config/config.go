@@ -2,6 +2,7 @@ package config
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"strings"
 
@@ -39,10 +40,10 @@ type Config struct {
 	Version bool `yaml:"version"`
 }
 
-func Init() *Config {
+func Init() (*Config, error) {
 	file, err := assets.EmbeddedFiles.ReadFile("configs/env.development.yaml")
 	if err != nil {
-		log.Fatal("fatal error config file: \n", err)
+		return nil, fmt.Errorf("fatal error config file: %w", err)
 	}
 
 	viper.AddConfigPath("./")
@@ -53,17 +54,17 @@ func Init() *Config {
 
 	err = viper.ReadConfig(bytes.NewReader(file))
 	if err != nil {
-		log.Fatal("fatal error config file: \n", err)
+		return nil, fmt.Errorf("fatal error config file: %w", err)
 	}
 
 	var c Config
 
 	err = viper.Unmarshal(&c)
 	if err != nil {
-		log.Fatal("fatal error config file: \n", err)
+		return nil, fmt.Errorf("fatal error config file: %w", err)
 	}
 
 	log.Println("Config initialize success!")
 
-	return &c
+	return &c, nil
 }

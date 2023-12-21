@@ -32,12 +32,12 @@ func NewServer(addr string, cfg *config.Config, db *sql.DB, jobQueue chan worker
 	}
 }
 
-func (s *Server) Run() {
+func (s *Server) Run() error {
 	mux := http.NewServeMux()
 
 	tr := taskdomain.NewPostgresTaskRepository(s.db)
 	ts := taskservice.NewService(tr)
-	th := newTaskHandler(ts)
+	th := newTaskHandler(ts, s.validator, s.jobQueue)
 
 	// Create and Start dispatcher.
 	dispatcher := worker.NewDispatcher(10, s.jobQueue, ts)
@@ -45,13 +45,12 @@ func (s *Server) Run() {
 
 	mux.Handle("/tasks/", th)
 	mux.Handle("/tasks", th)
-	mux.Handle("/multiple/", errorHandler(s.processMultipleTasks))
-	mux.Handle("/multiple", errorHandler(s.processMultipleTasks))
 
 	mux.HandleFunc("/swagger/", httpSwagger.WrapHandler)
 
 	log.Println("Server running on: ", s.addr)
-	http.ListenAndServe(s.addr, mux)
+
+	return http.ListenAndServe(s.addr, mux)
 }
 
 type apiFunc func(http.ResponseWriter, *http.Request) error

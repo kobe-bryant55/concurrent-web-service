@@ -19,7 +19,9 @@ type postgresStore struct {
 	DB *sql.DB
 }
 
-func NewPostgresStore(opts ...StoreOptsFunc) SQLStore {
+func NewPostgresStore(opts ...StoreOptsFunc) (SQLStore, error) {
+	var err error
+
 	storeOnce.Do(func() {
 		o := postgresStoreDefaultOpts()
 		for _, fn := range opts {
@@ -30,32 +32,44 @@ func NewPostgresStore(opts ...StoreOptsFunc) SQLStore {
 
 		db, err := sql.Open("postgres", conStr)
 		if err != nil {
-			log.Fatal(err.Error())
+			err = fmt.Errorf("SQL open error: %w", err)
+			return
+		}
+
+		if err := db.Ping(); err != nil {
+			err = fmt.Errorf("SQL Connection error: %w", err)
+			return
 		}
 
 		singleton = &postgresStore{DB: db}
-
-		if err := db.Ping(); err != nil {
-			log.Fatal("Connection Error: " + err.Error())
-		}
 	})
 
-	return singleton
+	return singleton, err
 }
 
 func (s postgresStore) GetInstance() *sql.DB {
 	return s.DB
 }
 
-func (s postgresStore) InitDB() {
+func (s postgresStore) InitDB() error {
+	var err error
 	initOnce.Do(func() {
-		s.createStatusEnums()
-		s.createTasksTable()
+		if err2 := s.createStatusEnums(); err != nil {
+			err = err2
+			return
+		}
+		if err2 := s.createTasksTable(); err != nil {
+			err = err2
+			return
+		}
+
 		log.Println("DB started successfully...")
 	})
+
+	return err
 }
 
-func (s postgresStore) createStatusEnums() {
+func (s postgresStore) createStatusEnums() error {
 	query := `DO $$ BEGIN
 		IF to_regtype('status') IS NULL THEN
 		CREATE TYPE status AS ENUM('active', 'passive');
@@ -65,11 +79,13 @@ func (s postgresStore) createStatusEnums() {
 
 	_, err := s.DB.Exec(query)
 	if err != nil {
-		log.Fatal("tasks status enums creation failed: ", err.Error())
+		return fmt.Errorf("tasks status enums creation failed: %w", err)
 	}
+
+	return nil
 }
 
-func (s postgresStore) createTasksTable() {
+func (s postgresStore) createTasksTable() error {
 	query := `CREATE TABLE IF NOT EXISTS tasks (
     	id				serial PRIMARY KEY,
     	description 	varchar(500) NOT NULL, 
@@ -80,8 +96,10 @@ func (s postgresStore) createTasksTable() {
 
 	_, err := s.DB.Exec(query)
 	if err != nil {
-		log.Fatal("tasks table creation failed: ", err.Error())
+		return fmt.Errorf("tasks table creation failed: %w", err)
 	}
+
+	return nil
 }
 
 func postgresStoreDefaultOpts() StoreOpts {

@@ -5,7 +5,7 @@ import (
 )
 
 type SQLStore interface {
-	InitDB()
+	InitDB() error
 	GetInstance() *sql.DB
 }
 

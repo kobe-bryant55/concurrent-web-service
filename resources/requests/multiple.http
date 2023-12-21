@@ -1,5 +1,5 @@
 ### Multiple Task Process
-POST {{host}}/multiple
+POST {{host}}/tasks/multiple
 Content-Type: application/json
 
 {

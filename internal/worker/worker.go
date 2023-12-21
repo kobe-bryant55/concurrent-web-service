@@ -3,6 +3,7 @@ package worker
 import (
 	"github.com/MehmetTalhaSeker/concurrent-web-service/application/taskservice"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/dto"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/logger"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/apputils"
 )
 
@@ -38,18 +39,44 @@ func (w Worker) Start() {
 				switch job.Payload.OperationType {
 				case dto.OpCreate:
 					d := new(dto.TaskCreateRequest)
-					apputils.InterfaceToStruct(job.Payload.Data, d)
-					go w.service.Create(d)
+					err := apputils.InterfaceToStruct(job.Payload.Data, d)
+					if err != nil {
+						logger.WarningLog.Println(err)
+					}
+
+					go func() {
+						err := w.service.Create(d)
+						if err != nil {
+							logger.WarningLog.Println(err)
+						}
+					}()
 
 				case dto.OpPut:
 					d := new(dto.TaskUpdateRequest)
-					apputils.InterfaceToStruct(job.Payload.Data, d)
-					go w.service.Update(d)
+					err := apputils.InterfaceToStruct(job.Payload.Data, d)
+					if err != nil {
+						logger.WarningLog.Println(err)
+					}
+
+					go func() {
+						_, err := w.service.Update(d)
+						if err != nil {
+							logger.WarningLog.Println(err)
+						}
+					}()
 
 				case dto.OpDelete:
 					d := new(dto.RequestWithID)
-					apputils.InterfaceToStruct(job.Payload.Data, d)
-					go w.service.Delete(d)
+					err := apputils.InterfaceToStruct(job.Payload.Data, d)
+					if err != nil {
+						logger.WarningLog.Println(err)
+					}
+					go func() {
+						_, err := w.service.Delete(d)
+						if err != nil {
+							logger.WarningLog.Println(err)
+						}
+					}()
 				}
 
 			case <-w.quit:

@@ -63,11 +63,10 @@ func TestNewPostgresStore(t *testing.T) {
 		}
 	}()
 
-	// Check store is nil or not.
-	store := database.NewPostgresStore(database.WithUser(user), database.WithName(name), database.WithPassword(password), database.WithPort(p.Port()))
-
-	if store == nil {
-		t.Fatalf("NewPostgresStore returned a nil store")
+	// Check store is Created or not.
+	store, err := database.NewPostgresStore(database.WithUser(user), database.WithName(name), database.WithPassword(password), database.WithPort(p.Port()))
+	if err != nil {
+		t.Fatalf("error creating postgres store: %s", err.Error())
 	}
 
 	defer store.GetInstance().Close()

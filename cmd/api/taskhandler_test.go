@@ -3,7 +3,9 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/testutils"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/validatorutils"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/worker"
 	"github.com/stretchr/testify/assert"
 	"log"
 	"net/http"
@@ -11,16 +13,14 @@ import (
 	"testing"
 
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/dto"
-	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/shared/config"
 )
 
-func TestServer_processMultipleTasks(t *testing.T) {
-	cfg := config.Config{Worker: struct {
-		MaxWorker int   `yaml:"max_worker"`
-		MaxQueue  int   `yaml:"max_queue"`
-		MaxLength int64 `yaml:"max_length"`
-	}{MaxWorker: 0, MaxQueue: 0, MaxLength: 2048}}
-	server := NewServer("localhost:8080", &cfg, nil, nil)
+func TestTaskHandler_processMultipleTasks(t *testing.T) {
+	ms := &testutils.MockService{}
+	validator := validatorutils.NewValidator()
+	jobQueue := make(chan worker.Job, 10)
+
+	th := newTaskHandler(ms, validator, jobQueue)
 
 	testCases := []struct {
 		Name             string
@@ -89,9 +89,7 @@ func TestServer_processMultipleTasks(t *testing.T) {
 
 			w := httptest.NewRecorder()
 
-			server.validator = validatorutils.NewValidator()
-
-			err = server.processMultipleTasks(w, req)
+			err = th.processMultipleTasks(w, req)
 
 			assert.Equal(t, tc.ExpectedHTTPCode, w.Code)
 
