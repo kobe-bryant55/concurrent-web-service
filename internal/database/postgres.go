@@ -3,10 +3,9 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	_ "github.com/lib/pq"
 	"log"
 	"sync"
-
-	_ "github.com/lib/pq"
 )
 
 var (
@@ -20,7 +19,8 @@ type postgresStore struct {
 }
 
 func NewPostgresStore(opts ...StoreOptsFunc) (SQLStore, error) {
-	var err error
+	ch := make(chan error, 1)
+	defer close(ch)
 
 	storeOnce.Do(func() {
 		o := postgresStoreDefaultOpts()
@@ -32,19 +32,20 @@ func NewPostgresStore(opts ...StoreOptsFunc) (SQLStore, error) {
 
 		db, err := sql.Open("postgres", conStr)
 		if err != nil {
-			err = fmt.Errorf("SQL open error: %w", err)
+			ch <- fmt.Errorf("SQL open error: %w", err)
 			return
 		}
 
 		if err := db.Ping(); err != nil {
-			err = fmt.Errorf("SQL Connection error: %w", err)
+			ch <- fmt.Errorf("SQL Connection error: %w", err)
 			return
 		}
 
+		ch <- nil
 		singleton = &postgresStore{DB: db}
 	})
 
-	return singleton, err
+	return singleton, <-ch
 }
 
 func (s postgresStore) GetInstance() *sql.DB {
@@ -52,21 +53,24 @@ func (s postgresStore) GetInstance() *sql.DB {
 }
 
 func (s postgresStore) InitDB() error {
-	var err error
+	ch := make(chan error, 1)
+	defer close(ch)
+
 	initOnce.Do(func() {
-		if err2 := s.createStatusEnums(); err != nil {
-			err = err2
+		if err := s.createStatusEnums(); err != nil {
+			ch <- err
 			return
 		}
-		if err2 := s.createTasksTable(); err != nil {
-			err = err2
+		if err := s.createTasksTable(); err != nil {
+			ch <- err
 			return
 		}
 
+		ch <- nil
 		log.Println("DB started successfully...")
 	})
 
-	return err
+	return <-ch
 }
 
 func (s postgresStore) createStatusEnums() error {
@@ -104,9 +108,9 @@ func (s postgresStore) createTasksTable() error {
 
 func postgresStoreDefaultOpts() StoreOpts {
 	return StoreOpts{
-		user:     "development",
-		name:     "development",
-		password: "development",
+		user:     "local",
+		name:     "local",
+		password: "local",
 		port:     "5432",
 	}
 }

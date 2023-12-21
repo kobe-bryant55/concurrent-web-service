@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/spf13/viper"
 
-	"github.com/MehmetTalhaSeker/mts-blog-api/assets"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/assets"
 )
 
 type Config struct {
@@ -32,22 +33,27 @@ type Config struct {
 	} `yaml:"jwt"`
 
 	Worker struct {
-		MaxWorker int   `yaml:"max_worker"`
-		MaxQueue  int   `yaml:"max_queue"`
-		MaxLength int64 `yaml:"max_length"`
+		MaxWorker int   `mapstructure:"max_worker"`
+		MaxQueue  int   `mapstructure:"max_queue"`
+		MaxLength int64 `mapstructure:"max_length"`
 	} `yaml:"worker"`
 
 	Version bool `yaml:"version"`
 }
 
 func Init() (*Config, error) {
-	file, err := assets.EmbeddedFiles.ReadFile("configs/env.development.yaml")
+	env := os.Getenv("cws-api-env")
+	if env == "" {
+		env = "local"
+	}
+
+	file, err := assets.EmbeddedFiles.ReadFile(fmt.Sprintf("configs/env.%s.yaml", env))
 	if err != nil {
 		return nil, fmt.Errorf("fatal error config file: %w", err)
 	}
 
 	viper.AddConfigPath("./")
-	viper.SetConfigName("env.development")
+	viper.SetConfigName(fmt.Sprintf("env.%s", env))
 	viper.SetConfigType("yaml")
 	viper.AutomaticEnv()
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))

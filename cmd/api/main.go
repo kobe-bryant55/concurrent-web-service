@@ -42,7 +42,7 @@ func main() {
 	}
 
 	// Create a jobQueue.
-	jobQueue := make(chan worker.Job, 10)
+	jobQueue := make(chan worker.Job, cfg.Worker.MaxQueue)
 
 	// Create RBA for role based authentication.
 	rb := rba.New()

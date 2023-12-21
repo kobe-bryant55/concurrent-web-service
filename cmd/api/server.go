@@ -45,7 +45,7 @@ func (s *Server) Run() error {
 	ah := newAuthHandler()
 
 	// Create and Start dispatcher.
-	dispatcher := worker.NewDispatcher(10, s.jobQueue, ts)
+	dispatcher := worker.NewDispatcher(s.cfg.Worker.MaxWorker, s.jobQueue, ts)
 	dispatcher.Run()
 
 	mux.Handle("/tasks/", authenticate(th))

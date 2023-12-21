@@ -6,9 +6,9 @@ services:
     restart: always
     container_name: webservice_db
     environment:
-      POSTGRES_USER: development
-      POSTGRES_PASSWORD: development
-      POSTGRES_DB: development
+      POSTGRES_USER: local
+      POSTGRES_PASSWORD: local
+      POSTGRES_DB: local
     ports:
       - "5432:5432"
     volumes:
