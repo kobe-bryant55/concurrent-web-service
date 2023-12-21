@@ -1,6 +1,7 @@
 ### Multiple Task Process
 POST {{host}}/tasks/multiple
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "token": "123",

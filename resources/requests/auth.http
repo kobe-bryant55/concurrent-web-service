@@ -1,0 +1,15 @@
+### Generate Admin JWT
+GET {{host}}/auth/admin
+Content-Type: application/json
+
+> {%
+    client.global.set("token", response.body.token)
+%}
+
+### Generate User JWT
+GET {{host}}/auth/user
+Content-Type: application/json
+
+> {%
+    client.global.set("token", response.body.token)
+%}

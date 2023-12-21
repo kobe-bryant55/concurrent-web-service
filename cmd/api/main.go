@@ -4,7 +4,9 @@ import (
 	_ "github.com/MehmetTalhaSeker/concurrent-web-service/docs"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/database"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/logger"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/rba"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/shared/config"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/validatorutils"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/worker"
 	"log"
 )
@@ -42,8 +44,13 @@ func main() {
 	// Create a jobQueue.
 	jobQueue := make(chan worker.Job, 10)
 
+	// Create RBA for role based authentication.
+	rb := rba.New()
+
+	vl := validatorutils.NewValidator()
+
 	// Create and Start server.
-	server := NewServer(":3333", cfg, store.GetInstance(), jobQueue)
+	server := NewServer(":3333", cfg, store.GetInstance(), jobQueue, rb, vl)
 
 	if err = server.Run(); err != nil {
 		logger.ErrorLog.Println(err)

@@ -1,46 +1,27 @@
 package errorutils
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 	"strings"
 )
 
-// API Errors.
-var (
-	ErrBadRequest       = errors.New("bad request")
-	ErrMethodNotAllowed = errors.New("method not allowed")
-)
-
-// Common errors.
-var (
-	ErrJSONDecode = errors.New("json decode error")
-	ErrJSONEncode = errors.New("json encode error")
-	ErrInvalidID  = errors.New("invalid ID")
-)
-
-// Task Errors.
-var (
-	ErrTaskCount    = errors.New("task count failed")
-	ErrTaskCreate   = errors.New("task create failed")
-	ErrTaskDelete   = errors.New("task delete failed")
-	ErrTaskRead     = errors.New("task read failed")
-	ErrTaskReads    = errors.New("task reads failed")
-	ErrTaskUpdate   = errors.New("task update failed")
-	ErrTaskNotFound = errors.New("task not found")
-)
-
 // errorCodes a map to store error codes.
 var errorCodes = map[error]string{
+	// Auth
+	ErrInvalidToken:      ErrCodeInvalidToken,
+	ErrExpiredToken:      ErrCodeExpiredToken,
+	ErrMissingAuthHeader: ErrCodeMissingAuthHeader,
+
 	// API
 	ErrBadRequest:       ErrCodeBadRequest,
 	ErrMethodNotAllowed: ErrCodeMethodNotAllowed,
 
 	// Common
-	ErrJSONDecode: ErrCodeJSONDecode,
-	ErrJSONEncode: ErrCodeJSONEncode,
-	ErrInvalidID:  ErrCodeInvalidID,
+	ErrJSONDecode:   ErrCodeJSONDecode,
+	ErrJSONEncode:   ErrCodeJSONEncode,
+	ErrInvalidID:    ErrCodeInvalidID,
+	ErrUnauthorized: ErrCodeUnauthorized,
 
 	// Tasks
 	ErrTaskCount:    ErrCodeTaskCount,
@@ -61,14 +42,20 @@ func Code(err error) string {
 }
 
 var statusCodeMap = map[string]int{
+	// Auth
+	ErrCodeInvalidToken:      http.StatusUnauthorized,
+	ErrCodeExpiredToken:      http.StatusUnauthorized,
+	ErrCodeMissingAuthHeader: http.StatusUnauthorized,
+
 	// API
 	ErrCodeBadRequest:       http.StatusBadRequest,
 	ErrCodeMethodNotAllowed: http.StatusMethodNotAllowed,
 
 	// Common
-	ErrCodeJSONDecode: http.StatusUnprocessableEntity,
-	ErrCodeJSONEncode: http.StatusUnprocessableEntity,
-	ErrCodeInvalidID:  http.StatusBadRequest,
+	ErrCodeJSONDecode:   http.StatusUnprocessableEntity,
+	ErrCodeJSONEncode:   http.StatusUnprocessableEntity,
+	ErrCodeInvalidID:    http.StatusBadRequest,
+	ErrCodeUnauthorized: http.StatusUnauthorized,
 
 	// Task
 	ErrCodeTaskCount:    http.StatusUnprocessableEntity,

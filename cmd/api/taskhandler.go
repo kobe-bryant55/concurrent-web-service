@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/application/taskservice"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/dto"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/rba"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/types"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/apiutils"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/apputils"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/errorutils"
@@ -29,13 +31,15 @@ type taskHandler struct {
 	service   taskservice.Service
 	validator validatorutils.Validator
 	queue     chan worker.Job
+	rba       rba.RBA
 }
 
-func newTaskHandler(service taskservice.Service, validator validatorutils.Validator, queue chan worker.Job) *taskHandler {
+func newTaskHandler(service taskservice.Service, validator validatorutils.Validator, queue chan worker.Job, rba rba.RBA) *taskHandler {
 	return &taskHandler{
 		service:   service,
 		validator: validator,
 		queue:     queue,
+		rba:       rba,
 	}
 }
 
@@ -72,6 +76,10 @@ func (h *taskHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *taskHandler) create(w http.ResponseWriter, r *http.Request) error {
+	if err := h.rba.CheckHasRole(r.Context(), types.Admin); err != nil {
+		return err
+	}
+
 	d := new(dto.TaskCreateRequest)
 
 	if err := json.NewDecoder(r.Body).Decode(&d); err != nil {
@@ -114,6 +122,10 @@ func (h *taskHandler) read(w http.ResponseWriter, r *http.Request) error {
 }
 
 func (h *taskHandler) update(w http.ResponseWriter, r *http.Request) error {
+	if err := h.rba.CheckHasRole(r.Context(), types.Admin); err != nil {
+		return err
+	}
+
 	d := new(dto.TaskUpdateRequest)
 	id := getID(r, "/tasks/")
 
@@ -133,6 +145,10 @@ func (h *taskHandler) update(w http.ResponseWriter, r *http.Request) error {
 }
 
 func (h *taskHandler) delete(w http.ResponseWriter, r *http.Request) error {
+	if err := h.rba.CheckHasRole(r.Context(), types.Admin); err != nil {
+		return err
+	}
+
 	d := new(dto.RequestWithID)
 	id := getID(r, "/tasks/")
 	d.ID = id
@@ -160,9 +176,8 @@ func (h *taskHandler) delete(w http.ResponseWriter, r *http.Request) error {
 // @Failure      500  {object}  errorutils.APIErrors
 // @Router /multiple [post]
 func (h *taskHandler) processMultipleTasks(w http.ResponseWriter, r *http.Request) error {
-	if r.Method != http.MethodPost {
-		apiutils.WriteJSON(w, http.StatusMethodNotAllowed, errorutils.New(errorutils.ErrMethodNotAllowed, nil))
-		return nil
+	if err := h.rba.CheckHasRole(r.Context(), types.Admin); err != nil {
+		return err
 	}
 
 	content := new(dto.PayloadCollection)

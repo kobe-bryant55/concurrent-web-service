@@ -20,7 +20,7 @@ func TestTaskHandler_processMultipleTasks(t *testing.T) {
 	validator := validatorutils.NewValidator()
 	jobQueue := make(chan worker.Job, 10)
 
-	th := newTaskHandler(ms, validator, jobQueue)
+	th := newTaskHandler(ms, validator, jobQueue, nil)
 
 	testCases := []struct {
 		Name             string
