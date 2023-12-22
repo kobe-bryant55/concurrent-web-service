@@ -78,7 +78,7 @@ func TestTaskHandler_processMultipleTasks(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.Name, func(t *testing.T) {
-			payloadCollection := &dto.PayloadCollection{Payloads: tc.RequestBody, Token: "token"}
+			payloadCollection := &dto.PayloadCollection{Payloads: tc.RequestBody}
 			payloadCollectionBytes, err := json.Marshal(payloadCollection)
 			if err != nil {
 				log.Fatal("cannot marshal json")

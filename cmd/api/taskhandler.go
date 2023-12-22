@@ -47,31 +47,24 @@ func (h *taskHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch {
 	case r.Method == http.MethodPost && multiple.MatchString(r.URL.Path):
 		errorHandler(h.processMultipleTasks)(w, r)
-		return
 
 	case r.Method == http.MethodPost && taskCreate.MatchString(r.URL.Path):
 		errorHandler(h.create)(w, r)
-		return
 
 	case r.Method == http.MethodGet && taskReads.MatchString(r.URL.Path):
 		errorHandler(h.list)(w, r)
-		return
 
 	case r.Method == http.MethodGet && taskRead.MatchString(r.URL.Path):
 		errorHandler(h.read)(w, r)
-		return
 
 	case r.Method == http.MethodPut && taskUpdate.MatchString(r.URL.Path):
 		errorHandler(h.update)(w, r)
-		return
 
 	case r.Method == http.MethodDelete && taskDelete.MatchString(r.URL.Path):
 		errorHandler(h.delete)(w, r)
-		return
 
 	default:
 		apiutils.WriteJSON(w, http.StatusMethodNotAllowed, errorutils.New(errorutils.ErrMethodNotAllowed, nil))
-		return
 	}
 }
 
@@ -165,16 +158,19 @@ func (h *taskHandler) delete(w http.ResponseWriter, r *http.Request) error {
 // processMultipleTasks godoc
 // @Summary Process Multiple Tasks
 // @Description Create, update and delete tasks with single request.
-// @Tags tags
+// @Tags TASK
 // @Accept  json
 // @Param processMultipleTasks body dto.PayloadCollection true "Input"
+// @Param Authorization header string true "Insert your access token" default(Bearer eyJblabla)
 // @Produce  json
 // @Success 200 {object} dto.ResponseOK
 // @Failure      400  {object}  errorutils.APIErrors
+// @Failure      401  {object}  errorutils.APIErrors
 // @Failure      422  {object}  errorutils.APIErrors
 // @Failure      404  {object}  errorutils.APIErrors
 // @Failure      500  {object}  errorutils.APIErrors
-// @Router /multiple [post]
+// @Example      500  {object}  errorutils.APIErrors
+// @Router /tasks/multiple [post]
 func (h *taskHandler) processMultipleTasks(w http.ResponseWriter, r *http.Request) error {
 	if err := h.rba.CheckHasRole(r.Context(), types.Admin); err != nil {
 		return err

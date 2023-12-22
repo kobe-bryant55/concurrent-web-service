@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/application/taskservice"
 	taskdomain "github.com/MehmetTalhaSeker/concurrent-web-service/domain/task"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/logger"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/rba"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/shared/config"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/errorutils"
@@ -22,9 +23,10 @@ type Server struct {
 	validator validatorutils.Validator
 	jobQueue  chan worker.Job
 	rba       rba.RBA
+	lg        *logger.Logger
 }
 
-func NewServer(addr string, cfg *config.Config, db *sql.DB, jobQueue chan worker.Job, rba rba.RBA, vl validatorutils.Validator) *Server {
+func NewServer(addr string, cfg *config.Config, db *sql.DB, jobQueue chan worker.Job, rba rba.RBA, vl validatorutils.Validator, lg *logger.Logger) *Server {
 	return &Server{
 		addr:      addr,
 		cfg:       cfg,
@@ -32,6 +34,7 @@ func NewServer(addr string, cfg *config.Config, db *sql.DB, jobQueue chan worker
 		jobQueue:  jobQueue,
 		rba:       rba,
 		validator: vl,
+		lg:        lg,
 	}
 }
 
@@ -44,14 +47,16 @@ func (s *Server) Run() error {
 
 	ah := newAuthHandler()
 
+	lh := newLogHandler(s.lg)
+
 	// Create and Start dispatcher.
-	dispatcher := worker.NewDispatcher(s.cfg.Worker.MaxWorker, s.jobQueue, ts)
+	dispatcher := worker.NewDispatcher(s.cfg.Worker.MaxWorker, s.jobQueue, ts, s.lg)
 	dispatcher.Run()
 
-	mux.Handle("/tasks/", authenticate(th))
-	mux.Handle("/tasks", authenticate(th))
-	mux.Handle("/auth", ah)
-	mux.Handle("/auth/", ah)
+	mux.Handle("/tasks/", lh.log(authenticate(th)))
+	mux.Handle("/tasks", lh.log(authenticate(th)))
+	mux.Handle("/auth", lh.log(ah))
+	mux.Handle("/auth/", lh.log(ah))
 
 	mux.HandleFunc("/swagger/", httpSwagger.WrapHandler)
 

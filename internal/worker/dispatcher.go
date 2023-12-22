@@ -2,6 +2,7 @@ package worker
 
 import (
 	"github.com/MehmetTalhaSeker/concurrent-web-service/application/taskservice"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/logger"
 	"log"
 )
 
@@ -11,17 +12,18 @@ type Dispatcher struct {
 	WorkerPool chan chan Job
 	jobQueue   chan Job
 	service    taskservice.Service
+	lg         *logger.Logger
 }
 
-func NewDispatcher(maxWorkers int, jobQueue chan Job, service taskservice.Service) *Dispatcher {
+func NewDispatcher(maxWorkers int, jobQueue chan Job, service taskservice.Service, lg *logger.Logger) *Dispatcher {
 	pool := make(chan chan Job, maxWorkers)
-	return &Dispatcher{WorkerPool: pool, maxWorkers: maxWorkers, jobQueue: jobQueue, service: service}
+	return &Dispatcher{WorkerPool: pool, maxWorkers: maxWorkers, jobQueue: jobQueue, service: service, lg: lg}
 }
 
 func (d *Dispatcher) Run() {
 	// starting n number of workers
 	for i := 0; i < d.maxWorkers; i++ {
-		worker := NewWorker(d.WorkerPool, d.service)
+		worker := NewWorker(d.WorkerPool, d.service, d.lg)
 		worker.Start()
 	}
 

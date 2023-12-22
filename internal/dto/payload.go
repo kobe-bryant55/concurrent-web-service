@@ -1,7 +1,6 @@
 package dto
 
 type PayloadCollection struct {
-	Token    string    `json:"token" validate:"required"`
 	Payloads []Payload `json:"payloads" validate:"required"`
 }
 

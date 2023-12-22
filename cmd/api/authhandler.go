@@ -27,18 +27,23 @@ func (h *authHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch {
 	case r.Method == http.MethodGet && generateAdminJWT.MatchString(r.URL.Path):
 		errorHandler(h.generateAdminToken)(w, r)
-		return
 
 	case r.Method == http.MethodGet && generateUserJWT.MatchString(r.URL.Path):
 		errorHandler(h.generateUserToken)(w, r)
-		return
 
 	default:
 		apiutils.WriteJSON(w, http.StatusMethodNotAllowed, errorutils.New(errorutils.ErrMethodNotAllowed, nil))
-		return
 	}
 }
 
+// generateAdminToken godoc
+// @Summary Generate admin token
+// @Tags AUTH
+// @Description Generate an admin token.
+// @Produce  json
+// @Success 200 {object} dto.TokenResponse
+// @Failure 500  {object}  errorutils.APIErrors
+// @Router /auth/admin [get]
 func (h *authHandler) generateAdminToken(w http.ResponseWriter, r *http.Request) error {
 	token, err := apputils.CreateJWT(types.Admin)
 	if err != nil {
@@ -49,6 +54,14 @@ func (h *authHandler) generateAdminToken(w http.ResponseWriter, r *http.Request)
 	return nil
 }
 
+// generateUserToken godoc
+// @Summary Generate user token
+// @Tags AUTH
+// @Description Generate an user token.
+// @Produce  json
+// @Success 200 {object} dto.TokenResponse
+// @Failure 500  {object}  errorutils.APIErrors
+// @Router /auth/user [get]
 func (h *authHandler) generateUserToken(w http.ResponseWriter, r *http.Request) error {
 	token, err := apputils.CreateJWT(types.Registered)
 	if err != nil {

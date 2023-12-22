@@ -18,14 +18,16 @@ type Worker struct {
 	JobChannel chan Job
 	quit       chan struct{}
 	service    taskservice.Service
+	lg         *logger.Logger
 }
 
-func NewWorker(workerPool chan chan Job, service taskservice.Service) Worker {
+func NewWorker(workerPool chan chan Job, service taskservice.Service, lg *logger.Logger) Worker {
 	return Worker{
 		WorkerPool: workerPool,
 		JobChannel: make(chan Job),
 		quit:       make(chan struct{}),
 		service:    service,
+		lg:         lg,
 	}
 }
 
@@ -41,13 +43,13 @@ func (w Worker) Start() {
 					d := new(dto.TaskCreateRequest)
 					err := apputils.InterfaceToStruct(job.Payload.Data, d)
 					if err != nil {
-						logger.WarningLog.Println(err)
+						w.lg.WarningLog.Println(err)
 					}
 
 					go func() {
 						err := w.service.Create(d)
 						if err != nil {
-							logger.WarningLog.Println(err)
+							w.lg.WarningLog.Println(err)
 						}
 					}()
 
@@ -55,13 +57,13 @@ func (w Worker) Start() {
 					d := new(dto.TaskUpdateRequest)
 					err := apputils.InterfaceToStruct(job.Payload.Data, d)
 					if err != nil {
-						logger.WarningLog.Println(err)
+						w.lg.WarningLog.Println(err)
 					}
 
 					go func() {
 						_, err := w.service.Update(d)
 						if err != nil {
-							logger.WarningLog.Println(err)
+							w.lg.WarningLog.Println(err)
 						}
 					}()
 
@@ -69,12 +71,12 @@ func (w Worker) Start() {
 					d := new(dto.RequestWithID)
 					err := apputils.InterfaceToStruct(job.Payload.Data, d)
 					if err != nil {
-						logger.WarningLog.Println(err)
+						w.lg.WarningLog.Println(err)
 					}
 					go func() {
 						_, err := w.service.Delete(d)
 						if err != nil {
-							logger.WarningLog.Println(err)
+							w.lg.WarningLog.Println(err)
 						}
 					}()
 				}

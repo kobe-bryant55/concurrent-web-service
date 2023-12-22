@@ -4,7 +4,6 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "token": "123",
   "payloads": [
     {
       "operationType": "OpCreate",

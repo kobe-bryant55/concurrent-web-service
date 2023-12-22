@@ -19,25 +19,25 @@ import (
 // @BasePath /
 func main() {
 	// New logger.
-	logger.Init()
+	lg := logger.Init()
 
 	// Initialize application configs.
 	cfg, err := config.Init()
 	if err != nil {
-		logger.ErrorLog.Println(err)
+		lg.ErrorLog.Println(err)
 		log.Fatal(err)
 	}
 
 	// Create a Postgres store.
 	store, err := database.NewPostgresStore(database.WithUser(cfg.DB.User), database.WithName(cfg.DB.Name), database.WithPassword(cfg.DB.Password))
 	if err != nil {
-		logger.ErrorLog.Println(err)
+		lg.ErrorLog.Println(err)
 		log.Fatal(err)
 	}
 
 	// Initialize the Postgres store.
 	if err = store.InitDB(); err != nil {
-		logger.ErrorLog.Println(err)
+		lg.ErrorLog.Println(err)
 		log.Fatal(err)
 	}
 
@@ -50,10 +50,10 @@ func main() {
 	vl := validatorutils.NewValidator()
 
 	// Create and Start server.
-	server := NewServer(":3333", cfg, store.GetInstance(), jobQueue, rb, vl)
+	server := NewServer(":3333", cfg, store.GetInstance(), jobQueue, rb, vl, lg)
 
 	if err = server.Run(); err != nil {
-		logger.ErrorLog.Println(err)
+		lg.ErrorLog.Println(err)
 		log.Fatal(err)
 	}
 }
