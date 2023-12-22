@@ -1,0 +1,144 @@
+basePath: /
+definitions:
+  github_com_MehmetTalhaSeker_concurrent-web-service_internal_dto.OperationType:
+    enum:
+    - OpPut
+    - OpCreate
+    - OpDelete
+    type: string
+    x-enum-varnames:
+    - OpPut
+    - OpCreate
+    - OpDelete
+  github_com_MehmetTalhaSeker_concurrent-web-service_internal_dto.Payload:
+    properties:
+      data: {}
+      operationType:
+        $ref: '#/definitions/github_com_MehmetTalhaSeker_concurrent-web-service_internal_dto.OperationType'
+    required:
+    - data
+    - operationType
+    type: object
+  github_com_MehmetTalhaSeker_concurrent-web-service_internal_dto.PayloadCollection:
+    properties:
+      payloads:
+        items:
+          $ref: '#/definitions/github_com_MehmetTalhaSeker_concurrent-web-service_internal_dto.Payload'
+        type: array
+    required:
+    - payloads
+    type: object
+  github_com_MehmetTalhaSeker_concurrent-web-service_internal_dto.ResponseOK:
+    properties:
+      success:
+        type: string
+    type: object
+  github_com_MehmetTalhaSeker_concurrent-web-service_internal_dto.TokenResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  github_com_MehmetTalhaSeker_concurrent-web-service_internal_utils_errorutils.APIError:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+    type: object
+  github_com_MehmetTalhaSeker_concurrent-web-service_internal_utils_errorutils.APIErrors:
+    properties:
+      errors:
+        items:
+          $ref: '#/definitions/github_com_MehmetTalhaSeker_concurrent-web-service_internal_utils_errorutils.APIError'
+        type: array
+    type: object
+host: localhost:3333
+info:
+  contact: {}
+  description: Concurrent Data Processing Web Service
+  title: API
+  version: "0.01"
+paths:
+  /auth/admin:
+    get:
+      description: Generate an admin token.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_MehmetTalhaSeker_concurrent-web-service_internal_dto.TokenResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_MehmetTalhaSeker_concurrent-web-service_internal_utils_errorutils.APIErrors'
+      summary: Generate admin token
+      tags:
+      - AUTH
+  /auth/user:
+    get:
+      description: Generate an user token.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_MehmetTalhaSeker_concurrent-web-service_internal_dto.TokenResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_MehmetTalhaSeker_concurrent-web-service_internal_utils_errorutils.APIErrors'
+      summary: Generate user token
+      tags:
+      - AUTH
+  /tasks/multiple:
+    post:
+      consumes:
+      - application/json
+      description: Create, update and delete tasks with single request.
+      parameters:
+      - description: Input
+        in: body
+        name: processMultipleTasks
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_MehmetTalhaSeker_concurrent-web-service_internal_dto.PayloadCollection'
+      - default: Bearer eyJblabla
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_MehmetTalhaSeker_concurrent-web-service_internal_dto.ResponseOK'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_MehmetTalhaSeker_concurrent-web-service_internal_utils_errorutils.APIErrors'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_MehmetTalhaSeker_concurrent-web-service_internal_utils_errorutils.APIErrors'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_MehmetTalhaSeker_concurrent-web-service_internal_utils_errorutils.APIErrors'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/github_com_MehmetTalhaSeker_concurrent-web-service_internal_utils_errorutils.APIErrors'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_MehmetTalhaSeker_concurrent-web-service_internal_utils_errorutils.APIErrors'
+      summary: Process Multiple Tasks
+      tags:
+      - TASK
+swagger: "2.0"

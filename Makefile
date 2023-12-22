@@ -1,17 +1,16 @@
 TEST_OUTPUT := coverage.out
 
 # Start db container
-start-db:
+db-start:
 	docker compose up -d postgres-db
 
 # Stop db container
-down-db:
+db-down:
 	docker compose stop postgres-db
 
 # Remove db container
 rm-db:
 	docker compose rm -f postgres-db
-
 
 # Run all Tests
 test:

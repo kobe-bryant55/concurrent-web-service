@@ -1,5 +1,5 @@
 # Builder
-FROM --platform=linux/amd64 golang:1.21.4-alpine3.17 as builder
+FROM --platform=linux/amd64/v8 golang:1.21.4-alpine3.17 as builder
 
 RUN apk add alpine-sdk
 
@@ -16,10 +16,10 @@ RUN go mod download
 
 COPY . ./
 
-RUN go build -tags musl -o concurrenct-web-service ./api
+RUN go build -tags musl -o concurrenct-web-service ./cmd/api
 
 # Application container
-FROM --platform=linux/amd64 alpine:3.17.2
+FROM --platform=linux/amd64/v8 alpine:3.17.2
 
 RUN adduser -S -D -H -h /app appuser
 

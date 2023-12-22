@@ -12,17 +12,17 @@ type Logger struct {
 }
 
 func Init() *Logger {
-	c, err := os.OpenFile("critical.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	c, err := os.OpenFile("logs/critical.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	i, err := os.OpenFile("info.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	i, err := os.OpenFile("logs/info.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	wr, err := os.OpenFile("warning.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	wr, err := os.OpenFile("logs/warning.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}

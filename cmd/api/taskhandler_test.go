@@ -2,7 +2,11 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/appcontext"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/rba"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/types"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/testutils"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/validatorutils"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/worker"
@@ -19,8 +23,11 @@ func TestTaskHandler_processMultipleTasks(t *testing.T) {
 	ms := &testutils.MockService{}
 	validator := validatorutils.NewValidator()
 	jobQueue := make(chan worker.Job, 10)
+	rb := rba.New()
 
-	th := newTaskHandler(ms, validator, jobQueue, nil)
+	ctx := appcontext.WithRole(context.Background(), types.Admin)
+
+	th := newTaskHandler(ms, validator, jobQueue, rb)
 
 	testCases := []struct {
 		Name             string
@@ -72,7 +79,8 @@ func TestTaskHandler_processMultipleTasks(t *testing.T) {
 					},
 				},
 			},
-			ExpectedHTTPCode: http.StatusOK,
+			ExpectedHTTPCode: http.StatusBadRequest,
+			ExpectedResponse: `{"errors":[{"code":"task:map[id:123]-has-errors:-code=Status-is-required,-message=Status-is-required,-err=Key:-'TaskUpdateRequest.Status'-Error:Field-validation-for-'Status'-failed-on-the-'required'-tag","message":"task:map[id:123] has errors: code=Status-is-required, message=Status is required, err=Key: 'TaskUpdateRequest.Status' Error:Field validation for 'Status' failed on the 'required' tag"}]}`,
 		},
 	}
 
@@ -86,16 +94,15 @@ func TestTaskHandler_processMultipleTasks(t *testing.T) {
 
 			req, err := http.NewRequest("POST", "/multiple/", bytes.NewBuffer(payloadCollectionBytes))
 			assert.NoError(t, err)
+			req = req.WithContext(ctx)
 
 			w := httptest.NewRecorder()
 
-			err = th.processMultipleTasks(w, req)
+			errorHandler(th.processMultipleTasks)(w, req)
 
 			assert.Equal(t, tc.ExpectedHTTPCode, w.Code)
 
-			if tc.ExpectedResponse != "" {
-				assert.JSONEq(t, tc.ExpectedResponse, w.Body.String())
-			}
+			assert.JSONEq(t, tc.ExpectedResponse, w.Body.String())
 		})
 	}
 }
