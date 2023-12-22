@@ -4,19 +4,19 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"log"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/appcontext"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/dto"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/rba"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/types"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/testutils"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/validatorutils"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/worker"
 	"github.com/stretchr/testify/assert"
-	"log"
-	"net/http"
-	"net/http/httptest"
-	"testing"
-
-	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/dto"
 )
 
 func TestTaskHandler_processMultipleTasks(t *testing.T) {
@@ -87,6 +87,7 @@ func TestTaskHandler_processMultipleTasks(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.Name, func(t *testing.T) {
 			payloadCollection := &dto.PayloadCollection{Payloads: tc.RequestBody}
+
 			payloadCollectionBytes, err := json.Marshal(payloadCollection)
 			if err != nil {
 				log.Fatal("cannot marshal json")
@@ -94,6 +95,7 @@ func TestTaskHandler_processMultipleTasks(t *testing.T) {
 
 			req, err := http.NewRequest("POST", "/multiple/", bytes.NewBuffer(payloadCollectionBytes))
 			assert.NoError(t, err)
+
 			req = req.WithContext(ctx)
 
 			w := httptest.NewRecorder()

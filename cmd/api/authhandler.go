@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+	"regexp"
+
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/dto"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/types"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/apiutils"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/apputils"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/errorutils"
-	"net/http"
-	"regexp"
 )
 
 var (
@@ -16,8 +17,7 @@ var (
 	generateUserJWT  = regexp.MustCompile(`^/auth/user/*$`)
 )
 
-type authHandler struct {
-}
+type authHandler struct{}
 
 func newAuthHandler() *authHandler {
 	return &authHandler{}
@@ -43,7 +43,7 @@ func (h *authHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // @Produce  json
 // @Success 200 {object} dto.TokenResponse
 // @Failure 500  {object}  errorutils.APIErrors
-// @Router /auth/admin [get]
+// @Router /auth/admin [get].
 func (h *authHandler) generateAdminToken(w http.ResponseWriter, r *http.Request) error {
 	token, err := apputils.CreateJWT(types.Admin)
 	if err != nil {
@@ -51,6 +51,7 @@ func (h *authHandler) generateAdminToken(w http.ResponseWriter, r *http.Request)
 	}
 
 	apiutils.WriteJSON(w, http.StatusOK, dto.TokenResponse{Token: token})
+
 	return nil
 }
 
@@ -61,7 +62,7 @@ func (h *authHandler) generateAdminToken(w http.ResponseWriter, r *http.Request)
 // @Produce  json
 // @Success 200 {object} dto.TokenResponse
 // @Failure 500  {object}  errorutils.APIErrors
-// @Router /auth/user [get]
+// @Router /auth/user [get].
 func (h *authHandler) generateUserToken(w http.ResponseWriter, r *http.Request) error {
 	token, err := apputils.CreateJWT(types.Registered)
 	if err != nil {
@@ -69,5 +70,6 @@ func (h *authHandler) generateUserToken(w http.ResponseWriter, r *http.Request) 
 	}
 
 	apiutils.WriteJSON(w, http.StatusOK, dto.TokenResponse{Token: token})
+
 	return nil
 }

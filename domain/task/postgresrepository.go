@@ -2,6 +2,7 @@ package taskdomain
 
 import (
 	"database/sql"
+
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/errorutils"
 )
 
@@ -19,7 +20,6 @@ func (r *taskRepository) Create(t *Task) error {
 	query := `INSERT INTO tasks (description, title, status_state) VALUES ($1, $2, $3)`
 
 	_, err := r.db.Query(query, t.GetDescription(), t.GetTitle(), t.GetStatus())
-
 	if err != nil {
 		return errorutils.New(errorutils.ErrTaskCreate, err)
 	}
@@ -69,7 +69,6 @@ func (r *taskRepository) Reads() ([]*Task, error) {
 
 func (r *taskRepository) Update(t *Task) error {
 	_, err := r.db.Query("UPDATE tasks SET description = $1, title = $2, status_state = $3 WHERE id = $4;", t.GetDescription(), t.GetTitle(), t.GetStatus(), t.GetID())
-
 	if err != nil {
 		return errorutils.New(errorutils.ErrTaskUpdate, err)
 	}

@@ -3,9 +3,10 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/lib/pq"
 	"log"
 	"sync"
+
+	_ "github.com/lib/pq"
 )
 
 var (
@@ -42,6 +43,7 @@ func NewPostgresStore(opts ...StoreOptsFunc) (SQLStore, error) {
 		}
 
 		ch <- nil
+
 		singleton = &postgresStore{DB: db}
 	})
 
@@ -61,12 +63,14 @@ func (s postgresStore) InitDB() error {
 			ch <- err
 			return
 		}
+
 		if err := s.createTasksTable(); err != nil {
 			ch <- err
 			return
 		}
 
 		ch <- nil
+
 		log.Println("DB started successfully...")
 	})
 

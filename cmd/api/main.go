@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	_ "github.com/MehmetTalhaSeker/concurrent-web-service/docs"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/database"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/logger"
@@ -8,7 +10,6 @@ import (
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/shared/config"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/validatorutils"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/worker"
-	"log"
 )
 
 // @title API
@@ -16,7 +17,7 @@ import (
 // @description Concurrent Data Processing Web Service
 
 // @host localhost:3333
-// @BasePath /
+// @BasePath /.
 func main() {
 	// New logger.
 	lg := logger.Init()

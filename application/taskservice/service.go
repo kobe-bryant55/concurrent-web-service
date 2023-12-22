@@ -1,7 +1,7 @@
 package taskservice
 
 import (
-	"github.com/MehmetTalhaSeker/concurrent-web-service/domain/task"
+	taskdomain "github.com/MehmetTalhaSeker/concurrent-web-service/domain/task"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/dto"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/types"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/apputils"

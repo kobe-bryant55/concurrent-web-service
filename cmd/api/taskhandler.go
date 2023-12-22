@@ -3,6 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
+	"regexp"
+	"sync"
+
 	"github.com/MehmetTalhaSeker/concurrent-web-service/application/taskservice"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/dto"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/rba"
@@ -12,10 +17,6 @@ import (
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/errorutils"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/validatorutils"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/worker"
-	"io"
-	"net/http"
-	"regexp"
-	"sync"
 )
 
 var (
@@ -85,6 +86,7 @@ func (h *taskHandler) create(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	apiutils.WriteJSON(w, http.StatusOK, "OK")
+
 	return nil
 }
 
@@ -134,6 +136,7 @@ func (h *taskHandler) update(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	apiutils.WriteJSON(w, http.StatusOK, res)
+
 	return nil
 }
 
@@ -152,6 +155,7 @@ func (h *taskHandler) delete(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	apiutils.WriteJSON(w, http.StatusOK, res)
+
 	return nil
 }
 
@@ -170,7 +174,7 @@ func (h *taskHandler) delete(w http.ResponseWriter, r *http.Request) error {
 // @Failure      404  {object}  errorutils.APIErrors
 // @Failure      500  {object}  errorutils.APIErrors
 // @Example      500  {object}  errorutils.APIErrors
-// @Router /tasks/multiple [post]
+// @Router /tasks/multiple [post].
 func (h *taskHandler) processMultipleTasks(w http.ResponseWriter, r *http.Request) error {
 	if err := h.rba.CheckHasRole(r.Context(), types.Admin); err != nil {
 		return err
@@ -186,14 +190,19 @@ func (h *taskHandler) processMultipleTasks(w http.ResponseWriter, r *http.Reques
 	}
 
 	var errs []*errorutils.APIError
+
 	var wg sync.WaitGroup
+
 	errCh := make(chan *errorutils.APIError, len(content.Payloads))
 
 	for _, payload := range content.Payloads {
 		payload := payload
+
 		wg.Add(1)
+
 		go func(payload dto.Payload) {
 			defer wg.Done()
+
 			if err := h.processTask(payload); err != nil {
 				errCh <- err
 			}
@@ -213,6 +222,7 @@ func (h *taskHandler) processMultipleTasks(w http.ResponseWriter, r *http.Reques
 	}
 
 	apiutils.WriteJSON(w, http.StatusOK, dto.ResponseOK{Success: "all"})
+
 	return nil
 }
 

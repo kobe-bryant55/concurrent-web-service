@@ -2,6 +2,10 @@ package main
 
 import (
 	"database/sql"
+	"log"
+	"net/http"
+	"strings"
+
 	"github.com/MehmetTalhaSeker/concurrent-web-service/application/taskservice"
 	taskdomain "github.com/MehmetTalhaSeker/concurrent-web-service/domain/task"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/logger"
@@ -11,9 +15,6 @@ import (
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/validatorutils"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/worker"
 	httpSwagger "github.com/swaggo/http-swagger"
-	"log"
-	"net/http"
-	"strings"
 )
 
 type Server struct {

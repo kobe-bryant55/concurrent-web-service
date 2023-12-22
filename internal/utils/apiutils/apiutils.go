@@ -12,6 +12,7 @@ func WriteJSON(w http.ResponseWriter, status int, v any) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
+
 		return
 	}
 

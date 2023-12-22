@@ -1,13 +1,13 @@
 package taskservice_test
 
 import (
-	"github.com/MehmetTalhaSeker/concurrent-web-service/application/taskservice"
-	taskdomain "github.com/MehmetTalhaSeker/concurrent-web-service/domain/task"
-	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/types"
-	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/testutils"
 	"testing"
 
+	"github.com/MehmetTalhaSeker/concurrent-web-service/application/taskservice"
+	taskdomain "github.com/MehmetTalhaSeker/concurrent-web-service/domain/task"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/dto"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/types"
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/testutils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

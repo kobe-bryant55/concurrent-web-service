@@ -2,8 +2,9 @@ package errorutils
 
 import (
 	"errors"
-	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/apiutils"
 	"net/http"
+
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/apiutils"
 )
 
 func Handler(err error, w http.ResponseWriter) {

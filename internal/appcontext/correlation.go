@@ -3,12 +3,11 @@ package appcontext
 import (
 	"context"
 	"errors"
+
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/types"
 )
 
-var (
-	ErrInvalidRole = errors.New("unable to extract role from appcontext")
-)
+var ErrInvalidRole = errors.New("unable to extract role from appcontext")
 
 type mtsBlogRoleCtxKey struct{}
 

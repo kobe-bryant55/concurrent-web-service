@@ -1,9 +1,10 @@
 package worker
 
 import (
+	"log"
+
 	"github.com/MehmetTalhaSeker/concurrent-web-service/application/taskservice"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/logger"
-	"log"
 )
 
 type Dispatcher struct {

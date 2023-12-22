@@ -1,14 +1,15 @@
 package main
 
 import (
+	"net/http"
+	"strings"
+	"time"
+
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/appcontext"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/dto"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/apputils"
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/errorutils"
 	"github.com/golang-jwt/jwt"
-	"net/http"
-	"strings"
-	"time"
 )
 
 func authenticate(next http.Handler) http.Handler {

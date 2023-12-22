@@ -1,10 +1,10 @@
 package taskdomain
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
 
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/types"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestTask_SetStatus(t *testing.T) {

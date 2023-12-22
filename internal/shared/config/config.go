@@ -7,9 +7,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/spf13/viper"
-
 	"github.com/MehmetTalhaSeker/concurrent-web-service/assets"
+	"github.com/spf13/viper"
 )
 
 type Config struct {
@@ -18,7 +17,7 @@ type Config struct {
 		Port    string `yaml:"port"`
 		BaseURL string `yaml:"base_url"`
 		Version string `yaml:"version"`
-	} ` yaml:"rest"`
+	} `yaml:"rest"`
 
 	DB struct {
 		User     string `yaml:"user"`

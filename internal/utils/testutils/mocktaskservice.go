@@ -5,7 +5,7 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-// MockService is a mock implementation of the Service interface
+// MockService is a mock implementation of the Service interface.
 type MockService struct {
 	mock.Mock
 }

@@ -14,5 +14,5 @@ const (
 
 type Payload struct {
 	OperationType `json:"operationType" validate:"required"`
-	Data          interface{} `json:"data" validate:"required"`
+	Data          interface{} `json:"data"          validate:"required"`
 }

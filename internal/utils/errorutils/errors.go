@@ -38,6 +38,7 @@ func Code(err error) string {
 	if code, ok := errorCodes[err]; ok {
 		return code
 	}
+
 	return strings.ReplaceAll(err.Error(), " ", "-")
 }
 

@@ -2,10 +2,11 @@ package apputils
 
 import (
 	"fmt"
-	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/types"
-	"github.com/golang-jwt/jwt"
 	"os"
 	"time"
+
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/types"
+	"github.com/golang-jwt/jwt"
 )
 
 func ValidateJWT(tokenString string) (*jwt.Token, error) {

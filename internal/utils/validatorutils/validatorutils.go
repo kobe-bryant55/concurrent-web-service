@@ -3,8 +3,8 @@ package validatorutils
 import (
 	"errors"
 	"fmt"
-	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/errorutils"
 
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/errorutils"
 	"github.com/go-playground/validator/v10"
 )
 

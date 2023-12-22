@@ -6,13 +6,13 @@ import (
 
 // TaskCreateRequest is the request body for the task create endpoint.
 type TaskCreateRequest struct {
-	Title       string `json:"title" validate:"required,min=3,max=55"`
+	Title       string `json:"title"       validate:"required,min=3,max=55"`
 	Description string `json:"description" validate:"required,min=5,max=100"`
 }
 
 // TaskUpdateRequest is the request body for the task update endpoint.
 type TaskUpdateRequest struct {
-	ID     string       `json:"id" validate:"required"`
+	ID     string       `json:"id"     validate:"required"`
 	Status types.Status `json:"status" validate:"required,oneof=active passive"`
 }
 

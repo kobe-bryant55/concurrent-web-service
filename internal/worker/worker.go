@@ -7,12 +7,12 @@ import (
 	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/apputils"
 )
 
-// Job represents the job to be run
+// Job represents the job to be run.
 type Job struct {
 	Payload dto.Payload
 }
 
-// Worker represents the worker that executes the job
+// Worker represents the worker that executes the job.
 type Worker struct {
 	WorkerPool chan chan Job
 	JobChannel chan Job
@@ -41,6 +41,7 @@ func (w Worker) Start() {
 				switch job.Payload.OperationType {
 				case dto.OpCreate:
 					d := new(dto.TaskCreateRequest)
+
 					err := apputils.InterfaceToStruct(job.Payload.Data, d)
 					if err != nil {
 						w.lg.WarningLog.Println(err)
@@ -55,6 +56,7 @@ func (w Worker) Start() {
 
 				case dto.OpPut:
 					d := new(dto.TaskUpdateRequest)
+
 					err := apputils.InterfaceToStruct(job.Payload.Data, d)
 					if err != nil {
 						w.lg.WarningLog.Println(err)
@@ -69,10 +71,12 @@ func (w Worker) Start() {
 
 				case dto.OpDelete:
 					d := new(dto.RequestWithID)
+
 					err := apputils.InterfaceToStruct(job.Payload.Data, d)
 					if err != nil {
 						w.lg.WarningLog.Println(err)
 					}
+
 					go func() {
 						_, err := w.service.Delete(d)
 						if err != nil {

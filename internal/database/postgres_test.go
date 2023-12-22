@@ -2,11 +2,11 @@ package database_test
 
 import (
 	"context"
-	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/database"
 	"log"
 	"testing"
 	"time"
 
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/database"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )

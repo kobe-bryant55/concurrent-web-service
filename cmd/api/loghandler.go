@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/logger"
 	"net/http"
+
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/logger"
 )
 
 type logHandler struct {

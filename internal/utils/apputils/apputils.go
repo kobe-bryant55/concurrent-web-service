@@ -3,8 +3,9 @@ package apputils
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/errorutils"
 	"strconv"
+
+	"github.com/MehmetTalhaSeker/concurrent-web-service/internal/utils/errorutils"
 )
 
 func InterfaceToStruct(in, out interface{}) error {

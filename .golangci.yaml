@@ -1,0 +1,88 @@
+linters-settings:
+  depguard:
+    rules:
+      main:
+        deny:
+          - pkg: "io/ioutil"
+            desc: "ioutil is deprecated starting with Go 1.16"
+  gci:
+    local-prefixes: "github.com/linkify-hq/linkify-api"
+    skip-generated: true
+  govet:
+    check-shadowing: true
+  golint:
+    min-confidence: 0.8
+  gocyclo:
+    min-complexity: 10
+  goconst:
+    min-len: 3
+    min-occurrences: 3
+  maligned:
+    suggest-new: true
+  dupl:
+    threshold: 100
+  goimports:
+    local-prefixes: "github.com/linkify-hq/linkify-api"
+  misspell:
+    locale: US
+  tagliatelle:
+    case:
+      use-field-name: true
+      rules:
+        json: camel
+        yaml: snake
+
+issues:
+  fix: true
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - containedctx
+        - dupl
+        - lll
+        - musttag
+    - linters:
+        - revive
+      text: "blank-imports"
+    - linters:
+        - goerr113
+      text: "err113: do not define dynamic errors" # todo fix later
+    - linters:
+        - gocritic
+      text: "exitAfterDefer:" # todo fix later
+    - path: "<folder_path>"
+      linters:
+        - gosec
+linters:
+  enable-all: true
+  disable:
+    - gomodguard # unable to parse module file go.mod: go.mod:3: invalid go version '1.21.0'
+    - gomoddirectives #  failed to get module file: go.mod:3: invalid go version '1.21.0': must match format 1.23
+    - gocritic #  invalid Go version format: 1.20.
+    - lll # todo fix later
+    - dupl # todo fix later
+    - gomnd # todo fix later
+    - funlen # todo fix later
+    - goconst # todo fix later
+    - godox
+    - exhaustruct
+    - musttag
+    - varnamelen
+    - wrapcheck
+    - ireturn
+    - gochecknoglobals
+    - paralleltest
+    # Deprecated
+    - exhaustivestruct
+    - golint
+    - maligned
+    - interfacer
+    - scopelint
+    - structcheck
+    - varcheck
+    - deadcode
+    - ifshort
+    - nosnakecase
+run:
+  go: "1.20.2"
+  deadline: 1m
